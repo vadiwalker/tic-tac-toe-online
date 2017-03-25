@@ -1,6 +1,6 @@
-#include <bits/stdc++.h>
 #ifndef ANY_HELPER_H
 #define ANY_HELPER_H
+#include <bits/stdc++.h>
 
 namespace any_helper {
 
