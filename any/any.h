@@ -4,8 +4,6 @@
 #include <bits/stdc++.h>
 #include "any_helper.h"
 
-using namespace any_helper;
-
 struct any {
 private:
     static const size_t MAX_SIZE = 16;
@@ -83,17 +81,17 @@ public:
         if (sizeof(T_decay) <= MAX_SIZE && std::is_nothrow_move_constructible<T_decay>::value) {
             state = SMALL;
             new (&data) T_decay(std::forward<T>(val));
-            deleter = small_object_deleter<T_decay>;
+            deleter = any_helper::small_object_deleter<T_decay>;
         } else {
             state = BIG;
             void* ptr = new T_decay(std::forward<T>(val));
             *(void**) &data = ptr;
-            deleter = big_object_deleter<T_decay>;
+            deleter = any_helper::big_object_deleter<T_decay>;
         }
 
-        copier = my_copier<T_decay>;
-        mover = my_mover<T_decay>;
-        allocator = my_allocator<T_decay>;
+        copier = any_helper::my_copier<T_decay>;
+        mover = any_helper::my_mover<T_decay>;
+        allocator = any_helper::my_allocator<T_decay>;
     }
 
     any& operator=(any const &other) {
