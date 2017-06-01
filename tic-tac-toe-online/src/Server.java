@@ -26,27 +26,22 @@ public class Server {
 
         while (true) {
             Socket connectionSocket = serverSocket.accept();
-//            Scanner inFromClient = new Scanner(connectionSocket.getInputStream());
+
             DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
             DataInputStream inFromClient = new DataInputStream(connectionSocket.getInputStream());
-            int x, y;
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(connectionSocket.getInputStream()));
-
             Field field = new Field(3);
+
+            int x, y;
+
             while (true) {
 
-                System.err.println("StartReading");
                 x = inFromClient.readInt();
-                System.err.println("One good!");
                 y = inFromClient.readInt();
-                System.err.println("x: " + x + " y: " + y);
 
+                field.makeMove(x, y, ENEMY);
+                field.display();
 
-                assert field.makeMove(x, y, ENEMY);
-
-                if (field.isFinished()) {
-                    System.out.println("GAME OVER");
+                if (Utils.checkFinished(field, ME)) {
                     break;
                 }
 
@@ -55,17 +50,16 @@ public class Server {
                     x = scanner.nextInt();
                     y = scanner.nextInt();
                     if (field.makeMove(x, y, ME)) {
-                        outToClient.write(x);
-                        outToClient.write(y);
-                        outToClient.flush();
+                        outToClient.writeInt(x);
+                        outToClient.writeInt(y);
+                        field.display();
                         break;
                     } else {
                         System.out.println("Invalid step!");
                     }
                 }
 
-                if (field.isFinished()) {
-                    System.out.println("GAME OVER");
+                if (Utils.checkFinished(field, ME)) {
                     break;
                 }
             }

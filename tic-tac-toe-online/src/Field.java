@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Optional;
+
 /**
  * Created by vadim on 01/06/17.
  */
@@ -36,7 +41,7 @@ public class Field {
         }
     }
 
-    public boolean isFinished() {
+    public Optional<Character> isFinished() {
         for (int i = 1; i <= size; i++) {
             if (field[i][1] == '.') continue;
             boolean win = true;
@@ -45,7 +50,9 @@ public class Field {
                     win = false;
                 }
             }
-            if (win) return true;
+            if (win) {
+                return Optional.of(field[i][1]);
+            }
         }
         for (int j = 1; j <= size; j++) {
             if (field[1][j] == '.') continue;
@@ -55,7 +62,9 @@ public class Field {
                     win = false;
                 }
             }
-            if (win) return true;
+            if (win) {
+                return Optional.of(field[1][j]);
+            }
         }
         if (field[1][1] != '.') {
             boolean win = true;
@@ -65,7 +74,7 @@ public class Field {
                 }
             }
             if (win) {
-                return true;
+                return Optional.of(field[1][1]);
             }
         }
         if (field[1][size] != '.') {
@@ -74,19 +83,27 @@ public class Field {
                 if (field[i][size + 1 - i] != field[i - 1][size + 2 - i]) {
                     win = false;
                 }
-                if (win) {
-                    return true;
-                }
+            }
+            if (win) {
+                return Optional.of(field[1][size]);
             }
         }
         for (int i = 1; i <= size; i++) {
             for (int j = 1; j <= size; j++) {
                 if (field[i][j] == '.') {
-                    return false;
+                    return Optional.empty();
                 }
             }
         }
-        return true;
+        return Optional.of('D');
     }
 
+    public void display() {
+        for (int i = 0; i <= size; i++) {
+            for (int j = 0; j <= size; j++) {
+                System.out.print(field[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
 }
